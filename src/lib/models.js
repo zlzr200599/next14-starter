@@ -51,6 +51,9 @@ const postSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    createdAt: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

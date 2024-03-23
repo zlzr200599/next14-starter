@@ -1,27 +1,34 @@
 import PostCard from "@/components/postCard/postCard";
 import styles from "./blog.module.css";
-const BlogPage = () => {
-  const postinfo = {
-    img: "https://images.pexels.com/photos/17993401/pexels-photo-17993401.jpeg",
-    title: "title",
-    createdAt: "createAt",
-    body: "hello world, this paragraph is desc",
-    slug: "slug-1",
-  };
+import { getPosts } from "@/lib/data";
+
+// FETCH DATA WITH AN API
+const getData = async () => {
+  const res = await fetch("http://localhost:3000/api/blog", {
+    next: { revalidate: 3600 },
+  });
+
+  if (!res.ok) {
+    throw new Error("Something went wrong");
+  }
+
+  return res.json();
+};
+
+const BlogPage = async () => {
+  // FETCH DATA WITH AN API
+  const posts = await getData();
+
+  // FETCH DATA WITHOUT AN API
+  // const posts = await getPosts();
+
   return (
     <div className={styles.container}>
-      <div className={styles.post}>
-        <PostCard post={postinfo} />
-      </div>
-      <div className={styles.post}>
-        <PostCard post={postinfo} />
-      </div>
-      <div className={styles.post}>
-        <PostCard post={postinfo} />
-      </div>
-      <div className={styles.post}>
-        <PostCard post={postinfo} />
-      </div>
+      {posts.map((post) => (
+        <div className={styles.post} key={post.id}>
+          <PostCard post={post} />
+        </div>
+      ))}
     </div>
   );
 };
